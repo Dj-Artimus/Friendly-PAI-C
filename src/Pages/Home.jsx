@@ -5,7 +5,7 @@ import {
   PlusSquareIcon,
   SendHorizontal,
 } from "lucide-react";
-import DynamicTextarea from "../components/DynamicTextArea";
+import DynamicTextArea from "../components/DynamicTextArea";
 import User_PAI_Message from "../components/User_PAI_Message";
 import { ChatStore } from "../Stores/ChatStore";
 import Sidebar from "../components/Sidebar";
@@ -188,7 +188,7 @@ const Home = () => {
                   <div className="w-5 h-5 bg-white rounded-full animate-bounce"></div>
                 </div>
               )}
-              <DynamicTextarea
+              <DynamicTextArea
                 disabled = {!(recentChats?.length) || false }
                 question={question}
                 setQuestion={setQuestion}

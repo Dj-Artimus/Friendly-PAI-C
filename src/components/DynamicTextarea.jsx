@@ -1,6 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 
-const DynamicTextarea = ({ question: value, setQuestion: setValue, ...props }) => {
+const DynamicTextArea = ({ question: value, setQuestion: setValue, ...props }) => {
   const textareaRef = useRef(null);
 
   const handleChange = (event) => {
@@ -44,4 +44,4 @@ const DynamicTextarea = ({ question: value, setQuestion: setValue, ...props }) =
   );
 };
 
-export default DynamicTextarea;
+export default DynamicTextArea;
