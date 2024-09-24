@@ -5,7 +5,7 @@ import {
   PlusSquareIcon,
   SendHorizontal,
 } from "lucide-react";
-import DynamicTextArea from "../components/DynamicTextArea";
+import DynamicTextarea from "../components/DynamicTextarea";
 import User_PAI_Message from "../components/User_PAI_Message";
 import { ChatStore } from "../Stores/ChatStore";
 import Sidebar from "../components/Sidebar";
@@ -30,7 +30,7 @@ const Home = () => {
   const ConversationRef = useRef();
 
   useEffect(() => {
-    document.title = "Friendly PAI | The Friendlies Companion Personalized Artificial Intelligence"
+    document.title = "Friendly PAI | The Friendlies Companion Personalized Artificial"
     getLatestChat();
     getRecentChats();
   }, []);
@@ -188,7 +188,7 @@ const Home = () => {
                   <div className="w-5 h-5 bg-white rounded-full animate-bounce"></div>
                 </div>
               )}
-              <DynamicTextArea
+              <DynamicTextarea
                 disabled = {!(recentChats?.length) || false }
                 question={question}
                 setQuestion={setQuestion}
