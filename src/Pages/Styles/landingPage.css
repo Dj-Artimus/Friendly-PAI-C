@@ -1,0 +1,13 @@
+
+.PAIAnimation {
+    animation: PAIAnimation 2s ease-in-out infinite alternate-reverse ;
+}
+
+@keyframes PAIAnimation {
+    from{
+        transform: translateY(0);
+    }
+    to{
+        transform: translateY(5px);
+    }
+}
