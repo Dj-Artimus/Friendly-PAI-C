@@ -63,14 +63,4 @@ export const UserStore = create((set) => ({
 
     },
 
-    Logout: async () => {
-        try {
-            const response = await api.post(`${SERVER}/api/auth/logout`)
-            console.log(response)
-            toast.success(response.data.message);
-        } catch (error) {
-            toast.error("Logout unsuccessfull, Please try again...");
-        }
-    }
-
 }))

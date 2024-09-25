@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
   AlignStartVertical,
+  Mic,
   PlusSquareIcon,
   SendHorizontal,
 } from "lucide-react";
@@ -20,7 +21,7 @@ const Home = () => {
     GetLatestChat,
     CreateNewChat,
     DeleteChat,
-    GetAllChats
+    GetAllChats,
   } = ChatStore();
   const [conversation, setConversation] = useState([]);
   const [question, setQuestion] = useState("");
@@ -28,9 +29,42 @@ const Home = () => {
   const [chatId, setChatId] = useState("");
   const [recentChats, setRecentChats] = useState([]);
   const ConversationRef = useRef();
+  const [transcript, setTranscript] = useState('');
+  const [isListening, setIsListening] = useState(false);
 
   useEffect(() => {
-    document.title = "Friendly PAI | The Friendlies Companion Personalized Artificial"
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SpeechRecognition();
+
+    recognition.onstart = () => {
+      setIsListening(true);
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+
+    recognition.onresult = (event) => {
+      const currentTranscript = event.results[0][0].transcript;
+      setTranscript(currentTranscript);
+      // Send the transcript to your chatbot API
+      setQuestion(currentTranscript)
+      handleAskFriendlyPAI(currentTranscript, chatId)
+    };
+
+    if (isListening) {
+      recognition.start();
+    }
+
+    return () => {
+      recognition.stop();
+    };
+  }, [isListening]);
+  
+
+  useEffect(() => {
+    document.title =
+      "Friendly PAI | The Friendlies Companion Personalized Artificial";
     getLatestChat();
     getRecentChats();
   }, []);
@@ -51,58 +85,60 @@ const Home = () => {
   const getLatestChat = async () => {
     const latestChat = await GetLatestChat();
     setConversation(latestChat?.chatsHistory);
-    setChatId(latestChat?.chatId)
+    setChatId(latestChat?.chatId);
   };
 
   const handleGetAllChats = async (ChatId) => {
     const allChats = await GetAllChats(ChatId);
-    setChatId(ChatId)
+    setChatId(ChatId);
     setConversation(allChats);
-  }
+  };
 
   const handleCreateNewChat = async () => {
     const chat = await CreateNewChat();
     setChatId(chat.chatId);
     setConversation([]);
-    getRecentChats()
-  }
+    getRecentChats();
+  };
 
   const handleDeleteChat = async (deleteChatId) => {
     await DeleteChat(deleteChatId);
     await getRecentChats();
-    if( deleteChatId === chatId ){
-      const recentChatId = recentChats[recentChats.length-1]._id;
-      const recentChatHistory = recentChats[recentChats.length-1].chatsHistory;
-      console.log(recentChatHistory)
-      console.log(recentChats.length)
-      if( recentChats.length <= 1 ){
-        setChatId( "" );
+    if (deleteChatId === chatId) {
+      const recentChatId = recentChats[recentChats.length - 1]._id;
+      const recentChatHistory =
+        recentChats[recentChats.length - 1].chatsHistory;
+      console.log(recentChatHistory);
+      console.log(recentChats.length);
+      if (recentChats.length <= 1) {
+        setChatId("");
         return setConversation([]);
       }
-      setChatId( recentChatId || "" );
-      return setConversation( recentChatHistory || [] );
+      setChatId(recentChatId || "");
+      return setConversation(recentChatHistory || []);
     }
+  };
 
-  }
-
-  const handleAskQuery = async (e) => {
-    e.preventDefault();
+  const handleAskFriendlyPAI = async (ques, chatID) => {
     setQuestion("");
-    const answer = await AskFriendlyPAI(question, chatId);
+    const answer = await AskFriendlyPAI(ques, chatID);
     setConversation((preConversation) => [
       ...preConversation,
       {
-        User: question,
+        User: ques,
         Model: answer,
       },
     ]);
+  }
+  const handleAskQuery = async (e) => {
+    e.preventDefault();
+    handleAskFriendlyPAI(question, chatId)
   };
 
   return (
     <>
       <div className=" min-w-screen text-white min-h-screen bg-black flex relative">
-
-          { isLoading && <LoadingSpinner/> }
+        {isLoading && <LoadingSpinner />}
 
         {/* SIDE BAR STARTS HERE */}
         {showSidebar && window.innerWidth < 640 && (
@@ -114,22 +150,30 @@ const Home = () => {
           ></div>
         )}
 
-        <Sidebar showSidebar={showSidebar} setShowSidebar={setShowSidebar} recentChats = {recentChats} handleDeleteChat = { handleDeleteChat } handleGetAllChats = {handleGetAllChats} />
+        <Sidebar
+          showSidebar={showSidebar}
+          setShowSidebar={setShowSidebar}
+          recentChats={recentChats}
+          handleDeleteChat={handleDeleteChat}
+          handleGetAllChats={handleGetAllChats}
+        />
         {/*  SIDE BAR ENDS HERE  */}
 
         <div className="w-full h-screen relative text-xl px-3 flex flex-col justify-between">
           <div className="flex w-full justify-between items-center bg-black p-1 pt-2 gap-1 font-semibold">
             <div className="flex gap-1 items-center">
-              <motion.div
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.96 }}
-                onClick={() => {
-                  setShowSidebar(!showSidebar);
-                }}
-                className="p-1 rounded-md sm:hidden "
-              >
-                <AlignStartVertical className="size-7 -ms-2 mt-1" />
-              </motion.div>
+              <button disabled={isChatLoading || isLoading}>
+                <motion.div
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.96 }}
+                  onClick={() => {
+                    setShowSidebar(!showSidebar);
+                  }}
+                  className="p-1 rounded-md sm:hidden "
+                >
+                  <AlignStartVertical className="size-7 -ms-2 mt-1" />
+                </motion.div>
+              </button>
               <h1 title="Friendly PAI">Friendly PAI</h1>
             </div>
             <div title="New Chat" onClick={handleCreateNewChat}>
@@ -138,8 +182,8 @@ const Home = () => {
                 whileTap={{ scale: 0.95 }}
                 className="w-fit h-fit mt-1"
               >
-                <button disabled={ isChatLoading || isLoading}>
-                <PlusSquareIcon className="size-7"/>
+                <button disabled={isChatLoading || isLoading}>
+                  <PlusSquareIcon className="size-7" />
                 </button>
               </motion.div>
             </div>
@@ -164,7 +208,11 @@ const Home = () => {
                 ))
               ) : (
                 <div className="w-full text-center">
-                  {recentChats?.length <= 0 ? <h1>Create new Chat to start.</h1> : <h1>There is no conversation to show</h1>}
+                  {recentChats?.length <= 0 ? (
+                    <h1>Create new Chat to start.</h1>
+                  ) : (
+                    <h1>There is no conversation to show</h1>
+                  )}
                 </div>
               )}
             </div>
@@ -189,7 +237,7 @@ const Home = () => {
                 </div>
               )}
               <DynamicTextarea
-                disabled = {!(recentChats?.length) || false }
+                disabled={!recentChats?.length || false}
                 question={question}
                 setQuestion={setQuestion}
                 placeholder="Ask me Anything..."
@@ -197,10 +245,10 @@ const Home = () => {
               />
               <button
                 type="submit"
-                className={`absolute right-1 py-2 px-3 me-3 bottom-6 rounded-xl flex items-center justify-between ${
+                className={`absolute -right-1 py-2 px-3 me-3 bottom-6 rounded-xl flex items-center justify-between ${
                   isLoading && "animate-pulse"
                 } `}
-                disabled={ !(recentChats?.length) || isChatLoading || isLoading}
+                disabled={!recentChats?.length || isChatLoading || isLoading}
               >
                 <motion.div
                   whileHover={{ scale: 1.2 }}
@@ -208,6 +256,22 @@ const Home = () => {
                   className="transition-all"
                 >
                   <SendHorizontal className="inline-block size-8" />
+                </motion.div>
+              </button>
+              <button
+                type="submit"
+                className={`absolute -right-1 py-2 px-3 me-3 bottom-[66px] rounded-xl flex items-center justify-between ${
+                  isLoading && "animate-pulse"
+                } `}
+                disabled={!recentChats?.length || isChatLoading || isLoading}
+                onClick={() => setIsListening(!isListening)}
+                >
+                <motion.div
+                  whileHover={{ scale: 1.2 }}
+                  whileTap={{ scale: 0.7 }}
+                  className="transition-all"
+                >
+                  <Mic className={`inline-block ${isListening ? "size-8 animate-pulse" : "size-6"} `} />
                 </motion.div>
               </button>
             </form>

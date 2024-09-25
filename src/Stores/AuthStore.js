@@ -66,7 +66,6 @@ export const AuthStore = create((set) => ({
             toast.error(error?.response?.data?.message || "Server Error")
             set({ isLoading: false })
         }
-
     },
 
     Login: async (email, password) => {
@@ -86,7 +85,7 @@ export const AuthStore = create((set) => ({
         try {
             set({ isLoading: true })
             const response = await api.post(`${SERVER}/api/auth/logout`);
-            set({ isLoading: false})
+            set({ isLoading: false , isAuthorized: false, isVerified: false})
             toast.success(response.data.message)
             return response.data.success;
         } catch (error) {
@@ -126,7 +125,11 @@ export const AuthStore = create((set) => ({
             const response = await api.post(`${SERVER}/api/auth/authorization-check`);
             set({ isCheckingAuth: false,  isVerified: response.data.isVerified , isAuthorized : response.data.isAuthorized });
         } catch (error) {
-            set({isCheckingAuth: false});
+              set({
+                isAuthorized: false,
+                isVerified: false,
+                isCheckingAuth: false
+              });
         }
     }
 }))

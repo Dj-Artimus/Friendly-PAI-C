@@ -13,17 +13,21 @@ const VerifyUserViaLink = () => {
   const [verified, setVerified] = useState(false);
 
   useEffect(() => {
-    document.title = "Forgot Password Confirmation";
-    const response = VerifyUser(token, otp);
-    if (response) {
-      setVerificationtitle(response || "Failed to Verify");
-      setVerificationMsg(`Your email address is Successfully verified. \n
-              You can proceed for further process.`);
-      setVerified(true);
-    } else {
-      setVerificationtitle("Failed to verify user.");
-      setVerificationMsg("Please try again.");
+    document.title = "Verification Successful";
+    const verify = async () => {
+      const response = await VerifyUser(token, otp);
+      if (response) {
+        setVerificationtitle(response || "Failed to Verify");
+        setVerificationMsg(`Your email address is Successfully verified. \n
+                You can proceed for further process.`);
+        setVerified(true);
+      } else {
+        setVerificationtitle("Failed to verify user.");
+        setVerificationMsg("Please try again.");
+        setVerified(false);
+      }
     }
+    verify();
   }, []);
 
   return (
@@ -54,27 +58,27 @@ const VerifyUserViaLink = () => {
             <h4 className="my-3 text-slate-400">{verificationMsg}</h4>
           </div>
 
-          {verified ? (
+          {verified ? 
             <CheckCircle
               size={32}
               className="w-full text-center mb-6 text-green-500"
             />
-          ) : (
+           : 
             <CircleAlert
               size={32}
               className="w-full text-center mb-6 text-red-500"
             />
-          )}
+          }
 
-          {verified ? (
+          {verified ? 
             <NavLink to={"/profile"}>
               <Button text="PROCEED" type={"button"} />
             </NavLink>
-          ) : (
+           : 
             <NavLink to={"/verify"}>
               <Button text="PLEASE TRY AGAIN" type={"button"} />
             </NavLink>
-          )}
+          }
         </motion.div>
       </div>
     </>

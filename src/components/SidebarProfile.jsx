@@ -6,10 +6,12 @@ import "./style/sidebar.css";
 import Interest from "./Interest";
 import { UserStore } from "../Stores/UserStore";
 import { useNavigate } from "react-router-dom";
+import { AuthStore } from "../Stores/AuthStore";
 
 const SidebarProfile = ({ showProfileBar, setShowProfileBar }) => {
   const [userProfile, setUserProfile] = useState({})
-  const { GetProfile , Logout} = UserStore()
+  const { GetProfile } = UserStore()
+  const { Logout } = AuthStore();
   const navigate = useNavigate()
   useEffect(() => {
     const fetchProfile = async () => { 
@@ -138,7 +140,6 @@ const SidebarProfile = ({ showProfileBar, setShowProfileBar }) => {
           <div className="px-10 mb-8" onClick={ async () => { 
             await Logout();
             navigate('/Friendly-PAI')
-            await AuthorizationCheck();
            }}>
           <Button text={"LOGOUT"} type={"button"} color={"bg-red-600"} />
           </div>
