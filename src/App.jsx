@@ -6,7 +6,7 @@ import SignUpPage from "./Pages/SignUpPage";
 import { Toaster } from "react-hot-toast";
 import VerifyPage from "./Pages/VerifyPage";
 import ProfilePage from "./Pages/ProfilePage";
-import NotFoundPage from "./Pages/NotFoundPage";
+// import NotFoundPage from "./Pages/NotFoundPage";
 import ForgotPasswordPage from "./Pages/ForgotPasswordPage";
 import ResetPasswordPage from "./Pages/ResetPasswordPage";
 import ForgotPasswordConfirmationPage from "./Pages/ForgotPasswordConfirmation";

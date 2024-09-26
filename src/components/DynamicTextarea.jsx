@@ -38,7 +38,6 @@ const DynamicTextarea = ({ question: value, setQuestion: setValue, ...props }) =
         overflow: 'hidden', // Ensure no scrollbar appears
         resize: 'none' // Prevent manual resizing
       }}
-      required
       autoComplete='true'
     />
   );

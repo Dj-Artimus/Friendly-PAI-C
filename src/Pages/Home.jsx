@@ -11,6 +11,7 @@ import User_PAI_Message from "../components/User_PAI_Message";
 import { ChatStore } from "../Stores/ChatStore";
 import Sidebar from "../components/Sidebar";
 import LoadingSpinner from "../components/LoadingSpinner";
+import toast from "react-hot-toast";
 
 const Home = () => {
   const {
@@ -29,7 +30,6 @@ const Home = () => {
   const [chatId, setChatId] = useState("");
   const [recentChats, setRecentChats] = useState([]);
   const ConversationRef = useRef();
-  const [transcript, setTranscript] = useState('');
   const [isListening, setIsListening] = useState(false);
 
   useEffect(() => {
@@ -46,10 +46,9 @@ const Home = () => {
 
     recognition.onresult = (event) => {
       const currentTranscript = event.results[0][0].transcript;
-      setTranscript(currentTranscript);
-      // Send the transcript to your chatbot API
-      setQuestion(currentTranscript)
-      handleAskFriendlyPAI(currentTranscript, chatId)
+      if( currentTranscript ){
+        handleAskFriendlyPAI(currentTranscript, chatId)
+      }
     };
 
     if (isListening) {
@@ -130,9 +129,11 @@ const Home = () => {
       },
     ]);
   }
+
   const handleAskQuery = async (e) => {
     e.preventDefault();
-    handleAskFriendlyPAI(question, chatId)
+    if(question) return handleAskFriendlyPAI(question, chatId);
+    // toast.error("Prompt cant be empty")
   };
 
   return (
@@ -241,13 +242,13 @@ const Home = () => {
                 question={question}
                 setQuestion={setQuestion}
                 placeholder="Ask me Anything..."
-                className=" w-[98%] ps-6 p-5 absolute bottom-4 -translate-x-1/2 left-1/2 rounded-xl bg-slate-900 resize-none shadow shadow-blue-500 pe-16 "
+                className={`w-[98%] ps-6 p-5 absolute bottom-4 -translate-x-1/2 left-1/2 rounded-xl bg-slate-900 resize-none  shadow-blue-500  pe-16  ${ !isListening ? "shadow" : "animate-pulse shadow-lg"}`}
               />
               <button
                 type="submit"
                 className={`absolute -right-1 py-2 px-3 me-3 bottom-6 rounded-xl flex items-center justify-between ${
                   isLoading && "animate-pulse"
-                } `}
+                } ${ question.length < 1 && "text-slate-500"} `}
                 disabled={!recentChats?.length || isChatLoading || isLoading}
               >
                 <motion.div

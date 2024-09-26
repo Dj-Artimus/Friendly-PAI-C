@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 const ProtectedRoute = () => {
     const { isAuthorized , isVerified , AuthorizationCheck } = AuthStore();
-    const [isCheckingAuth, setIsCheckingAuth] = useState(null)
+    const [isCheckingAuth, setIsCheckingAuth] = useState(true)
     useEffect(() => {
         const check = async () => {
             setIsCheckingAuth(true)
@@ -17,7 +17,9 @@ const ProtectedRoute = () => {
     
 
     if (isCheckingAuth) return <LoadingSpinner />;
-    return isAuthorized && isVerified ? <Outlet /> : <Navigate to={'/Friendly-PAI'} />
+    if (!isAuthorized || !isVerified) return <Navigate to={'/Friendly-PAI'} />
+
+    return <Outlet />
 }
 
 export default ProtectedRoute

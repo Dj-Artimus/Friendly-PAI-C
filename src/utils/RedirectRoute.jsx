@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 const RedirectRoute = () => {
     const { isAuthorized , isVerified , AuthorizationCheck } = AuthStore();
-    const [isCheckingAuth, setIsCheckingAuth] = useState(null)
+    const [isCheckingAuth, setIsCheckingAuth] = useState(true)
     useEffect(() => {
         const check = async () => {
             setIsCheckingAuth(true)
@@ -13,10 +13,11 @@ const RedirectRoute = () => {
             setIsCheckingAuth(false);
         }
         check();
-    }, [])
+    }, []);
     
     if (isCheckingAuth) return <LoadingSpinner />;
-    return isAuthorized && isVerified ? <Navigate to={'/'} /> : <Outlet />
+    if (isAuthorized && isVerified) return <Navigate to={'/'} /> ; 
+    return <Outlet />
 }
 
 export default RedirectRoute
