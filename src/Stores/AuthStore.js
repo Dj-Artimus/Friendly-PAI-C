@@ -22,6 +22,7 @@ export const AuthStore = create((set) => ({
             set({ isLoading: true })
             const response = await api.post(`${SERVER}/api/auth/signup`, { name, email, password })
             toast.success(response.data.message)
+            localStorage.setItem("token", response.data.token )
             set({ isLoading: false})
             return response.data.success;
         } catch (error) {
@@ -73,6 +74,7 @@ export const AuthStore = create((set) => ({
             set({ isLoading: true })
             const response = await api.post(`${SERVER}/api/auth/login`, { email, password })
             set({ isLoading: false })
+            localStorage.setItem("token", response.data.token )
             toast.success(response.data.message)
             return response.data.success;
         } catch (error) {
@@ -86,7 +88,8 @@ export const AuthStore = create((set) => ({
             set({ isLoading: true })
             const response = await api.post(`${SERVER}/api/auth/logout`);
             set({ isLoading: false , isAuthorized: false, isVerified: false})
-            toast.success(response.data.message)
+            localStorage.setItem("token", undefined );
+            toast.success(response.data.message);
             return response.data.success;
         } catch (error) {
             toast.error(error?.response?.data?.message || "Server Error")
@@ -122,7 +125,8 @@ export const AuthStore = create((set) => ({
 
     AuthorizationCheck: async () => {
         try {
-            const response = await api.post(`${SERVER}/api/auth/authorization-check`);
+            const token = localStorage.getItem("token");
+            const response = await api.post(`${SERVER}/api/auth/authorization-check` , { token });
             set({ isCheckingAuth: false,  isVerified: response.data.isVerified , isAuthorized : response.data.isAuthorized });
         } catch (error) {
               set({
