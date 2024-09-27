@@ -88,7 +88,7 @@ export const AuthStore = create((set) => ({
             set({ isLoading: true })
             const response = await api.post(`${SERVER}/api/auth/logout`);
             set({ isLoading: false , isAuthorized: false, isVerified: false})
-            localStorage.setItem("token", undefined );
+            localStorage.setItem("token", null );
             toast.success(response.data.message);
             return response.data.success;
         } catch (error) {
