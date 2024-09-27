@@ -23,7 +23,7 @@ const SidebarProfile = ({ showProfileBar, setShowProfileBar }) => {
   
   return (
         <div
-          className={`bg-slate-900 w-full h-screen shadow-2xl shadow-blue-900 border-2 border-slate-800 p-2 overflow-y-auto absolute top-0 left-0 transition-transform ${showProfileBar ? 'translate-x-0': '-translate-x-full sm:-translate-x-[110%]'}`}
+          className={`bg-slate-900 w-full min-h-screen shadow-2xl shadow-blue-900 border-2 border-slate-800 p-2 overflow-y-auto absolute top-0 left-0 transition-transform ${showProfileBar ? 'translate-x-0': '-translate-x-full sm:-translate-x-[110%]'}`}
           style={{ scrollbarWidth: "none" }}
         >
           {/* BACK BUTTON STARTS HERE */}

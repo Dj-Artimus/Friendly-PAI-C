@@ -11,7 +11,7 @@ const Sidebar = ({ showSidebar, setShowSidebar , recentChats , handleDeleteChat 
   const [showProfileBar, setShowProfileBar] = useState(false);
   return (
     <div
-      className={`bg-slate-900 w-[90%] sm:w-1/2 md:w-2/5 lg:w-1/3 xl:w-[28%] h-screen shadow-2xl shadow-blue-900 border-2 border-slate-800 p-4 overflow-y-auto absolute sm:static top-0 left-0 transition-transform transform z-10 ${
+      className={`bg-slate-900 w-[90%] sm:w-1/2 md:w-2/5 lg:w-1/3 xl:w-[28%] h-screen border-2 border-slate-800 p-4 overflow-y-auto absolute sm:static top-0 left-0 transition-transform transform z-10 ${
         showSidebar ? "translate-x-0" : "-translate-x-[110%]"
       } sm:translate-x-0`}
       style={{ scrollbarWidth: "none" }}
@@ -50,7 +50,10 @@ const Sidebar = ({ showSidebar, setShowSidebar , recentChats , handleDeleteChat 
           <h1>Recent Chats.</h1>
           <div
             className="bg-slate-950 w-full min-h-52 sm:min-h-64 overflow-y-auto rounded-lg my-2 max-h-80 p-2 py-1 last:border-b-0"
-            style={{ scrollbarWidth: "thin" }}
+            style={{
+                scrollbarWidth: "thin",
+                scrollbarColor: "#1e40af black ",
+              }}
           > 
             <div>
               { recentChats?.map(( chat ) => (

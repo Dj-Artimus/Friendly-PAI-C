@@ -34,8 +34,11 @@ const Home = () => {
 
   useEffect(() => {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    
+    if( !SpeechRecognition ) return console.error("Speech Recognition API not supported in this browser")
+      
     const recognition = new SpeechRecognition();
-
+    
     recognition.onstart = () => {
       setIsListening(true);
     };
