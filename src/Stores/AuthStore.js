@@ -74,7 +74,6 @@ export const AuthStore = create((set) => ({
             set({ isLoading: true })
             const response = await api.post(`${SERVER}/api/auth/login`, { email, password })
             set({ isLoading: false })
-            console.log(response.data)
             localStorage.setItem("token", response.data.token )
             toast.success(response.data.message)
             return response.data.success;
