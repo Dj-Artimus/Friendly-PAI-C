@@ -63,6 +63,7 @@ const LoginPage = () => {
               type="email"
               placeholder="Email"
               name="name"
+              autoComplete = "email"
             />
             <Input
               value={password}
@@ -73,6 +74,7 @@ const LoginPage = () => {
               type="password"
               placeholder="Password"
               name="name"
+              autoComplete = "current-password"
             />
             <p className="text-white mb-5 text-left w-full text-sm">
               Dont have an Account.{" "}

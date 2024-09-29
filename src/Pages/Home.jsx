@@ -110,8 +110,6 @@ const Home = () => {
       const recentChatId = recentChats[recentChats.length - 1]._id;
       const recentChatHistory =
         recentChats[recentChats.length - 1].chatsHistory;
-      console.log(recentChatHistory);
-      console.log(recentChats.length);
       if (recentChats.length <= 1) {
         setChatId("");
         return setConversation([]);

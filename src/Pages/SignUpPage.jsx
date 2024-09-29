@@ -69,6 +69,7 @@ const SignUpPage = () => {
               icon={User}
               type="text"
               placeholder="Name"
+              autoComplete = 'username'
             />
             <Input
               value={email}
@@ -78,6 +79,7 @@ const SignUpPage = () => {
               icon={Mail}
               type="email"
               placeholder="Email"
+              autoComplete = 'email'
             />
 
             <Input
@@ -95,6 +97,7 @@ const SignUpPage = () => {
               minLength = "8"
               maxLength = "16"
               pattern = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$&%.]).{8,16}"
+              autoComplete = "new-password"
             />
             {passwordNote && (
               <motion.p

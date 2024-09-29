@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import axios from 'axios';
 import toast from 'react-hot-toast';
-
+import Cookies from 'js-cookie';
 
 const SERVER = import.meta.env.VITE_SERVER; 
 
@@ -18,7 +18,10 @@ export const UserStore = create((set) => ({
             set({ isLoading: true });
             const response = await api.post(`${SERVER}/api/user/create-profile`, {
                 nickname, dob, age, gender, education
-            })
+            } , { headers : {
+                Authorization : `Bearer ${Cookies.get("safeToken")}`,
+                'Content-Type': 'application/json'
+            } } )
             toast.success(response.data.message)
             set({ isLoading: false });
             return response.data.success;
@@ -31,7 +34,10 @@ export const UserStore = create((set) => ({
     AddInterests: async (interests) => {
         try {
             set({ isLoading: true });
-            const response = await api.post(`${SERVER}/api/user/create-profile`, { interests: interests })
+            const response = await api.post(`${SERVER}/api/user/create-profile`, { interests: interests } , { headers : {
+                Authorization : `Bearer ${Cookies.get("safeToken")}`,
+                'Content-Type': 'application/json'
+            } } )
             set({ isLoading: false });
             toast.success(response.data.message)
             return response.data.success;
@@ -43,7 +49,10 @@ export const UserStore = create((set) => ({
 
     GetProfile: async () => {
         try {
-            const response = await api?.get(`${SERVER}/api/user/get-profile`);
+            const response = await api?.get(`${SERVER}/api/user/get-profile` , { headers : {
+                Authorization : `Bearer ${Cookies.get("safeToken")}`,
+                'Content-Type': 'application/json'
+            } } );
             const { name, email } = response?.data?.user
             const { nickname, dob, age, gender, education, interests } = response?.data?.profile
             const USER = {
