@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import {
   AlignStartVertical,
+  ImagePlus,
+  Loader2,
   Mic,
   PlusSquareIcon,
   SendHorizontal,
@@ -11,7 +13,6 @@ import User_PAI_Message from "../components/User_PAI_Message";
 import { ChatStore } from "../Stores/ChatStore";
 import Sidebar from "../components/Sidebar";
 import LoadingSpinner from "../components/LoadingSpinner";
-import toast from "react-hot-toast";
 
 const Home = () => {
   const {
@@ -23,9 +24,13 @@ const Home = () => {
     CreateNewChat,
     DeleteChat,
     GetAllChats,
+    UploadImage
   } = ChatStore();
   const [conversation, setConversation] = useState([]);
   const [question, setQuestion] = useState("");
+  const [image, setImage] = useState(null);
+  const [imgPath, setImgPath] = useState('')
+  const [showPrev, setShowPrev] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
   const [chatId, setChatId] = useState("");
   const [recentChats, setRecentChats] = useState([]);
@@ -119,16 +124,34 @@ const Home = () => {
     }
   };
 
+const handleImgchange = async (e) => {
+  const file = e.target.files[0] 
+  setImage(URL.createObjectURL(file))
+
+  const formData = new FormData();
+  formData.append("image", file);
+
+  const uploadImg = await UploadImage(formData);
+
+  const SERVER = import.meta.env.VITE_SERVER;
+
+  setShowPrev(uploadImg?.success);
+  setImgPath(`${SERVER}${uploadImg?.path}`);
+  e.target.value = '';
+}
+
   const handleAskFriendlyPAI = async (ques, chatID) => {
     setQuestion("");
-    const answer = await AskFriendlyPAI(ques, chatID);
+    const prompt = image ? [ ques , imgPath ] : ques;
+    const answer = await AskFriendlyPAI(prompt, chatID);
     setConversation((preConversation) => [
       ...preConversation,
       {
-        User: ques,
+        User: prompt,
         Model: answer,
       },
     ]);
+    setImage(null);
   }
 
   const handleAskQuery = async (e) => {
@@ -243,7 +266,7 @@ const Home = () => {
                 question={question}
                 setQuestion={setQuestion}
                 placeholder="Ask me Anything..."
-                className={`w-[98%] ps-6 p-5 absolute bottom-4 -translate-x-1/2 left-1/2 rounded-xl bg-slate-900 resize-none  shadow-blue-500  pe-16  ${ !isListening ? "shadow" : "animate-pulse shadow-lg"}`}
+                className={`w-[98%] ps-6 p-5 absolute bottom-4 -translate-x-1/2 left-1/2 rounded-xl bg-slate-900 resize-none  shadow-blue-500  pe-[70px]  ${ !isListening ? "shadow" : "animate-pulse shadow-lg"}`}
               />
               <button
                 type="submit"
@@ -261,7 +284,6 @@ const Home = () => {
                 </motion.div>
               </button>
               <button
-                type="submit"
                 className={`absolute -right-1 py-2 px-3 me-3 bottom-[66px] rounded-xl flex items-center justify-between ${
                   isLoading && "animate-pulse"
                 } `}
@@ -276,6 +298,28 @@ const Home = () => {
                   <Mic className={`inline-block ${isListening ? "size-8 animate-pulse" : "size-6"} `} />
                 </motion.div>
               </button>
+              <button
+                className={`absolute py-2 px-3 me-3 bottom-[67px] right-7 rounded-xl flex items-center justify-between ${
+                  isLoading && "animate-pulse"
+                } `}
+                disabled={!recentChats?.length || isChatLoading || isLoading}
+                >
+                <motion.div
+                  whileHover={{ scale: 1.2 }}
+                  whileTap={{ scale: 0.7 }}
+                  className="transition-all"
+                >
+                  <input type="file" accept="image/*" onChange={handleImgchange} className="size-5 absolute mt-2 opacity-0 " />
+                  <ImagePlus className={`inline-block size-[22px] `} />
+                </motion.div>
+              </button>
+              { image &&
+              <div className="z-10 w-16 absolute bottom-28 right-2 flex justify-center items-center" >
+                { showPrev ? <img src={image} alt="img" className="bg-slate-800 p-1 rounded-md" onClick={() => { setImage(null);}} />
+                :
+                <Loader2 className="mb-3 animate-spin" />
+                }
+                </div> }
             </form>
           </div>
           {/* PROMPT BAR ENDS HERE */}

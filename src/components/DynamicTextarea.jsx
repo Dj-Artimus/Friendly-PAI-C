@@ -31,11 +31,13 @@ const DynamicTextarea = ({ question: value, setQuestion: setValue, ...props }) =
       value={value}
       onChange={handleChange}
       onBlur={handleBlur}
+      onFocus={handleChange}
       style={{
         height: 'auto',
         maxHeight: '220px',
-        scrollbarWidth: 'thin',
+        scrollbarWidth: 'none',
         overflow: 'hidden', // Ensure no scrollbar appears
+        overflowY: 'auto',
         resize: 'none' // Prevent manual resizing
       }}
       autoComplete='true'

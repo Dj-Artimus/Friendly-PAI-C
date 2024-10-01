@@ -2,10 +2,23 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Trash2 } from "lucide-react";
 
-const RecentChat = ({ text, chatId, handleDeleteChat , handleGetAllChats}) => {
+const RecentChat = ({
+  text,
+  chatId,
+  handleDeleteChat,
+  handleGetAllChats,
+  showSidebar,
+  setShowSidebar,
+}) => {
   return (
     <div className="border-b border-slate-700 flex items-center gap-1">
-      <div className=" w-full h-full p-3 ps-4 whitespace-nowrap overflow-hidden text-ellipsis" onClick={() => { handleGetAllChats(chatId) }}>
+      <div
+        className=" w-full h-full p-3 ps-4 whitespace-nowrap overflow-hidden text-ellipsis"
+        onClick={() => {
+          handleGetAllChats(chatId);
+          setShowSidebar(!showSidebar);
+        }}
+      >
         {text}
       </div>
       <div>

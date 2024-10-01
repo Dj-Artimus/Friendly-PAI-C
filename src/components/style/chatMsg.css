@@ -1,0 +1,12 @@
+pre {
+    overflow: auto; /* Prevent horizontal scroll */
+    max-width: 100%; /* Ensure it doesn't exceed the container */
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    padding: 20px 0;
+  }
+
+  .code-container {
+    position: relative; 
+    margin-bottom: 1rem;
+  }

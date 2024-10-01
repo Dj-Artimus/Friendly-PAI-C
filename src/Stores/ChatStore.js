@@ -84,6 +84,20 @@ export const ChatStore = create((set) => ({
 
     },
 
+    UploadImage : async (formData) => {
+        try {
+            const response = await apiRequest.post(`${SERVER}/api/chat/upload-img` , formData , {
+                headers: {
+                    'Content-Type' : 'multipart/form-data'
+                }
+            } ) 
+            console.log(response.data)
+            return response.data;
+        } catch (error) {
+            toast.error("Failed to upload Image")
+        } 
+    },
+
     AskFriendlyPAI: async (query, chatId) => {
         set({ isChatLoading: true })
         try {

@@ -57,7 +57,7 @@ const Sidebar = ({ showSidebar, setShowSidebar , recentChats , handleDeleteChat 
           > 
             <div>
               { recentChats?.map(( chat ) => (
-                <RecentChat key={chat._id} text={ chat.latestQuery } chatId= { chat._id } handleDeleteChat = { handleDeleteChat } handleGetAllChats = {handleGetAllChats} />
+                <RecentChat key={chat._id} text={ chat.latestQuery } chatId= { chat._id } handleDeleteChat = { handleDeleteChat } handleGetAllChats = {handleGetAllChats} showSidebar = {showSidebar} setShowSidebar = {setShowSidebar} />
                 ) ) }
             </div>
           </div>
