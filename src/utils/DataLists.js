@@ -1,4 +1,48 @@
 
+export const serverErrorMessages = [
+  "Oops, it looks like my home 🏠 is temporarily offline! Don't worry, I'll be back online soon. Please try again in a bit! 🤗",
+  "I'm taking a quick coffee break ☕️, but it looks like my server is experiencing some issues. Please try again soon, and I'll be back to chat with you! 😊",
+  "Whoops, it seems I've encountered a tiny server glitch 🎮! Don't worry, my team is on it, and I'll be back online soon. Thanks for your patience! 😊",
+  "Uh-oh, it looks like my connection to the cloud ⛅️ is experiencing some turbulence! Please bear with me, and I'll try to reconnect soon. Thanks for understanding! 🤗",
+  "I'm feeling a bit sleepy 😴, and it looks like my server is too! I'll try to wake up soon and get back to chatting with you. Thanks for waiting! 😊",
+  "Whoops, it looks like my server is on a safari adventure 🦁🌳 and got lost along the way! Don't worry, I'll try to track it down and get back online soon. 🐾",
+  "Space alert! 🚀 It seems my server has encountered a glitchy galaxy 🌌 and is experiencing some technical difficulties. Please bear with me while I try to navigate through this astro-tastic issue! 💫",
+  "Uh-oh, it looks like my server has powered down 🔌 and is taking an unexpected nap! 😴 Don't worry, I'll try to recharge and get back online soon. 💻",
+  "Whoa, it seems my server has floated away to a different cloud ☁️ and is having some connection troubles! 🌫️ I'll try to retrieve it and get back to chatting with you soon. ☁️",
+  "Whoops, it looks like my server has encountered an internet intersection 🚦 and is experiencing some traffic congestion! 🚗 Don't worry, I'll try to reroute and get back online soon. 🌐",
+  "I'm currently in maintenance mode 🔧 and my server is undergoing some quick repairs! 💻 Please try again soon, and I'll be back online in no time. 📆",
+  "Uh-oh, it seems my server has set sail on a network navigation 🚣‍♀️ journey and has encountered some rocky waters! 🌊 Don't worry, I'll try to chart a new course and get back online soon. 🗺️",
+  "Whoa, it looks like my server has been caught in a server storm ⛈️ and is experiencing some technical difficulties! 💻 Please bear with me while I try to weather the storm and get back online soon. ☁️",
+  "I'm taking a quick caffeine break ☕️, but it looks like my server needs a boost too! 😴 Don't worry, I'll try to perk it up and get back online soon. 💻",
+  "Uh-oh, it seems my server has encountered some technical troubles! 🧐 Don't worry, I'm on it and will try to troubleshoot and get back online soon. 💻 Thanks for your patience! 🕰️"
+];
+
+export const serverConnectedMessages = [
+  "Server's Back Online 💻",
+  "Connection Reestablished 📈",
+  "We're Back Strong 💪",
+  "Server Restarted 🔄",
+  "Connection Restored 🔗",
+  "We're Online Again 🌐",
+  "Server Recovery Complete ✅",
+  "Connected Again 🤝",
+  "All Good Now 👍",
+  "Server's Online Now 💻",
+  "Reconnected 📢",
+  "We're Live Again 📺",
+  "Server's Up Again ⚡️",
+  "Connected Successfully 🤝",
+  "Server's Coffee Break Over ☕️",
+  "Power Nap Over 😴",
+  "Space Mission Complete 🚀",
+  "Turbulent Times Over ⛅️",
+  "Maintenance Over 🔧",
+  "Caffeine Reboot 💻",
+  "Navigation Charts Fixed 🗺️",
+  "Galaxy Reconnected 🌌",
+  "Internet Highway Reopened 🚗"
+];
+
 export const months = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'

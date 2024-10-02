@@ -9,7 +9,6 @@ import ImageOff  from "../images/empty-img.webp";
 const User_PAI_Message = ({ USER, PAI }) => {
   const isImgContain = USER instanceof Array;
   let USERmsg = isImgContain ? USER[0] : USER;
-  isImgContain && console.log(USER[1]);
   const formatedChat = (PAI) => {
     return marked(PAI, {
       highlight: (code, lang) => {

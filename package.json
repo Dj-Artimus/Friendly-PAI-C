@@ -25,6 +25,7 @@
     "react-router-dom": "^6.26.2",
     "react-syntax-highlighter": "^15.5.0",
     "react-typewriter-effect": "^1.1.0",
+    "socket.io-client": "^4.8.0",
     "zustand": "^4.5.5"
   },
   "devDependencies": {

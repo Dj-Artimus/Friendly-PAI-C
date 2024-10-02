@@ -2,6 +2,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { create } from "zustand";
 import Cookies from 'js-cookie';
+import { serverErrorMessages } from '../utils/DataLists'
 
 const SERVER = import.meta.env.VITE_SERVER;
 
@@ -79,7 +80,6 @@ export const ChatStore = create((set) => ({
             const response = await api( 'GET' , `${SERVER}/api/user/get-all-chats`)
             return response.data
         } catch (error) {
-            toast.error("Error to fetch rescent chats.")
         }
 
     },
@@ -91,7 +91,6 @@ export const ChatStore = create((set) => ({
                     'Content-Type' : 'multipart/form-data'
                 }
             } ) 
-            console.log(response.data)
             return response.data;
         } catch (error) {
             toast.error("Failed to upload Image")
@@ -105,8 +104,8 @@ export const ChatStore = create((set) => ({
             const answer = response.data;
             return answer;
         } catch (error) {
-            toast.error("Server Error. Please refresh")
-            return "SERVER ERROR. PLEASE TRY AGAIN."
+            toast.error("Server Error. Please wait...")
+            return serverErrorMessages[Math.floor(Math.random() * (serverErrorMessages.length))];
         } finally {
             set({ isChatLoading: false })
         }

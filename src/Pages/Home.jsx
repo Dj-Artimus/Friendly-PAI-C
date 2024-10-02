@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { io } from "socket.io-client";
 import { motion } from "framer-motion";
 import {
   AlignStartVertical,
@@ -13,6 +14,8 @@ import User_PAI_Message from "../components/User_PAI_Message";
 import { ChatStore } from "../Stores/ChatStore";
 import Sidebar from "../components/Sidebar";
 import LoadingSpinner from "../components/LoadingSpinner";
+import { serverConnectedMessages } from "../utils/DataLists";
+import toast from "react-hot-toast";
 
 const Home = () => {
   const {
@@ -24,26 +27,31 @@ const Home = () => {
     CreateNewChat,
     DeleteChat,
     GetAllChats,
-    UploadImage
+    UploadImage,
   } = ChatStore();
   const [conversation, setConversation] = useState([]);
   const [question, setQuestion] = useState("");
   const [image, setImage] = useState(null);
-  const [imgPath, setImgPath] = useState('')
+  const [imgPath, setImgPath] = useState("");
   const [showPrev, setShowPrev] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
   const [chatId, setChatId] = useState("");
   const [recentChats, setRecentChats] = useState([]);
   const ConversationRef = useRef();
   const [isListening, setIsListening] = useState(false);
+  const [toastId, setToastId] = useState(null);
 
   useEffect(() => {
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    
-    if( !SpeechRecognition ) return console.error("Speech Recognition API not supported in this browser")
-      
+    const SpeechRecognition =
+      window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition)
+      return console.error(
+        "Speech Recognition API not supported in this browser"
+      );
+
     const recognition = new SpeechRecognition();
-    
+
     recognition.onstart = () => {
       setIsListening(true);
     };
@@ -54,8 +62,8 @@ const Home = () => {
 
     recognition.onresult = (event) => {
       const currentTranscript = event.results[0][0].transcript;
-      if( currentTranscript ){
-        handleAskFriendlyPAI(currentTranscript, chatId)
+      if (currentTranscript) {
+        handleAskFriendlyPAI(currentTranscript, chatId);
       }
     };
 
@@ -67,14 +75,54 @@ const Home = () => {
       recognition.stop();
     };
   }, [isListening]);
-  
 
   useEffect(() => {
     document.title =
-      "Friendly PAI | The Friendlies Companion Personalized Artificial";
+      "Friendly PAI | The Friendliest Companion Personalized Artificial";
+
     getLatestChat();
     getRecentChats();
-  }, []);
+
+    const socket = io(import.meta.env.VITE_SERVER, {
+      withCredentials: true,
+      reconnection: true,
+      reconnectionAttempts: Infinity,
+      reconnectionDelay: 2000,
+    });
+
+    // Handle connection success
+    socket.on("connect", () => {
+      getLatestChat(); // Refresh chat when connected
+      getRecentChats();
+
+      if (toastId) {
+        toast.dismiss(toastId);
+        setToastId(null);
+      }
+    });
+
+    socket.on("disconnect", () => {
+      if (!toastId) {
+        const id = toast.loading("Connecting to the server...");
+        setToastId(id);
+      }
+    });
+
+    // Handle reconnection attempts and success
+    socket.io.on("reconnect", () => {
+      if (toastId) {
+        toast.dismiss(); // Dismiss loading toast
+        setToastId(null);
+      }
+
+      toast.success(serverConnectedMessages[Math.floor(Math.random()*serverConnectedMessages.length)]);
+    });
+
+    // Cleanup: disconnect the socket on component unmount
+    return () => {
+      socket.disconnect();
+    };
+  }, [toastId]);
 
   useEffect(() => {
     ConversationRef.current.scrollTo({
@@ -124,25 +172,25 @@ const Home = () => {
     }
   };
 
-const handleImgchange = async (e) => {
-  const file = e.target.files[0] 
-  setImage(URL.createObjectURL(file))
+  const handleImgchange = async (e) => {
+    const file = e.target.files[0];
+    setImage(URL.createObjectURL(file));
 
-  const formData = new FormData();
-  formData.append("image", file);
+    const formData = new FormData();
+    formData.append("image", file);
 
-  const uploadImg = await UploadImage(formData);
+    const uploadImg = await UploadImage(formData);
 
-  const SERVER = import.meta.env.VITE_SERVER;
+    const SERVER = import.meta.env.VITE_SERVER;
 
-  setShowPrev(uploadImg?.success);
-  setImgPath(`${SERVER}${uploadImg?.path}`);
-  e.target.value = '';
-}
+    setShowPrev(uploadImg?.success);
+    setImgPath(`${SERVER}${uploadImg?.path}`);
+    e.target.value = "";
+  };
 
   const handleAskFriendlyPAI = async (ques, chatID) => {
     setQuestion("");
-    const prompt = image ? [ ques , imgPath ] : ques;
+    const prompt = image ? [ques, imgPath] : ques;
     const answer = await AskFriendlyPAI(prompt, chatID);
     setConversation((preConversation) => [
       ...preConversation,
@@ -152,11 +200,11 @@ const handleImgchange = async (e) => {
       },
     ]);
     setImage(null);
-  }
+  };
 
   const handleAskQuery = async (e) => {
     e.preventDefault();
-    if(question) return handleAskFriendlyPAI(question, chatId);
+    if (question) return handleAskFriendlyPAI(question, chatId);
     // toast.error("Prompt cant be empty")
   };
 
@@ -266,14 +314,18 @@ const handleImgchange = async (e) => {
                 question={question}
                 setQuestion={setQuestion}
                 placeholder="Ask me Anything..."
-                className={`w-[98%] ps-6 p-5 absolute bottom-4 -translate-x-1/2 left-1/2 rounded-xl bg-slate-900 resize-none  shadow-blue-500  pe-[70px]  ${ !isListening ? "shadow" : "animate-pulse shadow-lg"}`}
+                className={`w-[98%] ps-6 p-5 absolute bottom-4 -translate-x-1/2 left-1/2 rounded-xl bg-slate-900 resize-none  shadow-blue-500  pe-[70px]  ${
+                  !isListening ? "shadow" : "animate-pulse shadow-lg"
+                }`}
               />
               <button
                 type="submit"
                 className={`absolute -right-1 py-2 px-3 me-3 bottom-6 rounded-xl flex items-center justify-between ${
                   isLoading && "animate-pulse"
-                } ${ question.length < 1 && "text-slate-500"} `}
-                disabled={!recentChats?.length || isChatLoading || isLoading}
+                } ${question.length < 1 && "text-slate-500"} `}
+                disabled={
+                  !recentChats?.length || isChatLoading || isLoading || showPrev
+                }
               >
                 <motion.div
                   whileHover={{ scale: 1.2 }}
@@ -289,13 +341,17 @@ const handleImgchange = async (e) => {
                 } `}
                 disabled={!recentChats?.length || isChatLoading || isLoading}
                 onClick={() => setIsListening(!isListening)}
-                >
+              >
                 <motion.div
                   whileHover={{ scale: 1.2 }}
                   whileTap={{ scale: 0.7 }}
                   className="transition-all"
                 >
-                  <Mic className={`inline-block ${isListening ? "size-8 animate-pulse" : "size-6"} `} />
+                  <Mic
+                    className={`inline-block ${
+                      isListening ? "size-8 animate-pulse" : "size-6"
+                    } `}
+                  />
                 </motion.div>
               </button>
               <button
@@ -303,23 +359,37 @@ const handleImgchange = async (e) => {
                   isLoading && "animate-pulse"
                 } `}
                 disabled={!recentChats?.length || isChatLoading || isLoading}
-                >
+              >
                 <motion.div
                   whileHover={{ scale: 1.2 }}
                   whileTap={{ scale: 0.7 }}
                   className="transition-all"
                 >
-                  <input type="file" accept="image/*" onChange={handleImgchange} className="size-5 absolute mt-2 opacity-0 " />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImgchange}
+                    className="size-5 absolute mt-2 opacity-0 "
+                  />
                   <ImagePlus className={`inline-block size-[22px] `} />
                 </motion.div>
               </button>
-              { image &&
-              <div className="z-10 w-16 absolute bottom-28 right-2 flex justify-center items-center" >
-                { showPrev ? <img src={image} alt="img" className="bg-slate-800 p-1 rounded-md" onClick={() => { setImage(null);}} />
-                :
-                <Loader2 className="mb-3 animate-spin" />
-                }
-                </div> }
+              {image && (
+                <div className="z-10 w-16 absolute bottom-28 right-2 flex justify-center items-center">
+                  {showPrev ? (
+                    <img
+                      src={image}
+                      alt="img"
+                      className="bg-slate-800 p-1 rounded-md"
+                      onClick={() => {
+                        setImage(null);
+                      }}
+                    />
+                  ) : (
+                    <Loader2 className="mb-3 animate-spin" />
+                  )}
+                </div>
+              )}
             </form>
           </div>
           {/* PROMPT BAR ENDS HERE */}
