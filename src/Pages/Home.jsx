@@ -16,6 +16,7 @@ import Sidebar from "../components/Sidebar";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { serverConnectedMessages , createNewChatMessages , startConversationMessages } from "../utils/DataLists";
 import toast from "react-hot-toast";
+import { AuthStore } from "../Stores/AuthStore";
 
 const Home = () => {
   const {
@@ -29,6 +30,7 @@ const Home = () => {
     GetAllChats,
     UploadImage,
   } = ChatStore();
+  const { Logout } = AuthStore();
   const [conversation, setConversation] = useState([]);
   const [question, setQuestion] = useState("");
   const [image, setImage] = useState(null);
@@ -40,6 +42,14 @@ const Home = () => {
   const ConversationRef = useRef();
   const [isListening, setIsListening] = useState(false);
   const [toastId, setToastId] = useState(null);
+
+  const socket = io(import.meta.env.VITE_SERVER, {
+    withCredentials: true,
+    reconnection: true,
+    reconnectionAttempts: Infinity,
+    reconnectionDelay: 2000,
+  });
+
 
   useEffect(() => {
     const SpeechRecognition =
@@ -82,13 +92,6 @@ const Home = () => {
 
     getLatestChat();
     getRecentChats();
-
-    const socket = io(import.meta.env.VITE_SERVER, {
-      withCredentials: true,
-      reconnection: true,
-      reconnectionAttempts: Infinity,
-      reconnectionDelay: 2000,
-    });
 
     // Handle connection success
     socket.on("connect", () => {
@@ -208,6 +211,16 @@ const Home = () => {
     // toast.error("Prompt cant be empty")
   };
 
+  const handleLogout = async () => { 
+    await Logout();
+    if(socket) socket.disconnect();
+    if(toastId) {
+      toast.dismiss(toastId);
+      setToastId(null);
+    }
+    navigate('/Friendly-PAI')
+   }
+
   return (
     <>
       <div className=" min-w-screen text-white min-h-screen bg-black flex relative">
@@ -229,6 +242,7 @@ const Home = () => {
           recentChats={recentChats}
           handleDeleteChat={handleDeleteChat}
           handleGetAllChats={handleGetAllChats}
+          handleLogout={handleLogout}
         />
         {/*  SIDE BAR ENDS HERE  */}
 

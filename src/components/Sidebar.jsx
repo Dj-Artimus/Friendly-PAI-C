@@ -6,7 +6,7 @@ import RecentChat from "./RecentChat";
 import "./style/sidebar.css";
 import SidebarProfile from "./SidebarProfile";
 
-const Sidebar = ({ showSidebar, setShowSidebar , recentChats , handleDeleteChat , handleGetAllChats }) => {
+const Sidebar = ({ showSidebar, setShowSidebar , recentChats , handleDeleteChat , handleGetAllChats , handleLogout }) => {
   const [darkMode, setDarkMode] = useState(true);
   const [showProfileBar, setShowProfileBar] = useState(false);
   return (
@@ -20,6 +20,7 @@ const Sidebar = ({ showSidebar, setShowSidebar , recentChats , handleDeleteChat 
         <SidebarProfile
           showProfileBar={showProfileBar}
           setShowProfileBar={setShowProfileBar}
+          handleLogout = {handleLogout}
         />
       </div>
       <div>
