@@ -43,6 +43,42 @@ export const serverConnectedMessages = [
   "Internet Highway Reopened 🚗"
 ];
 
+export const createNewChatMessages = [
+  "Your chatbox is looking a bit empty! 🌱 You can fill it by simply hitting that 'Create New Chat' button!",
+  "Let’s spark some joy! ✨ Just click the 'Create New Chat' button to start your journey!",
+  "Ready to make some memories? 🌈 Create a new chat by clicking that shiny button!",
+  "Don’t be shy! 🎉 Hit 'Create New Chat' to kick off a fun conversation!",
+  "Looks like there’s a blank canvas here! 🖌️ Get started by clicking 'Create New Chat'!",
+  "Your chat adventure awaits! 🚀 Just click 'Create New Chat' to begin!",
+  "Feeling social? 🌟 Hit that 'Create New Chat' button to connect with someone new!",
+  "Let’s get chatting! 💬 Click the 'Create New Chat' button to dive in!",
+  "The fun starts here! 🌟 Create a new chat by simply clicking that button!",
+  "Your next conversation is just a click away! 👉 Hit 'Create New Chat' to get started!",
+  "Ready to share your thoughts? 🗣️ Just click 'Create New Chat' and let’s go!",
+  "It’s time for some fun! 🎈 Click 'Create New Chat' to begin your chat journey!",
+  "Want to meet someone new? 🤝 Create a new chat by hitting that button!",
+  "Let’s make this space lively! 🎊 Just click 'Create New Chat' to start!",
+  "Exciting conversations await! 🎉 Simply hit the 'Create New Chat' button to begin!"
+];
+
+export const startConversationMessages = [
+  "It’s quiet here! 🌼 Say hello to start a new conversation!",
+  "Ready to chat? 😊 You can start by typing 'Hey' or 'Hello'!",
+  "Let’s break the ice! ❄️ Just say 'Hi' to kick off a conversation!",
+  "Don’t be shy! 👋 Type 'Hey' or 'What’s up?' to start chatting!",
+  "Your voice matters! 🎤 Start by saying 'Hello' or anything you like!",
+  "Looking to connect? 🌟 Just type 'Hi' to begin a new conversation!",
+  "The chat is waiting for you! 💬 Start by saying 'Hey there'!",
+  "Want to share something? 🤗 Type 'Hello' to get started!",
+  "Let’s get the chat going! 🎉 Just say 'Hi' or anything you want!",
+  "Time to chat! 🗨️ Start by typing 'Hello' or 'How’s it going?'",
+  "It’s a great day to connect! 🌞 Just say 'Hi' to start chatting!",
+  "Let’s start a conversation! 🚀 Type 'Hey' or ask anything!",
+  "Your thoughts matter! 🌼 Start by saying 'Hello' or 'What’s on your mind?'",
+  "Feeling curious? 🤔 Just say 'Hi' to kick off the conversation!",
+  "Let’s have a chat! 🎈 Type 'Hey there' or 'What’s up?' to begin!"
+];
+
 export const months = [
     'January', 'February', 'March', 'April', 'May', 'June',
     'July', 'August', 'September', 'October', 'November', 'December'

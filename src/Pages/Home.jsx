@@ -14,7 +14,7 @@ import User_PAI_Message from "../components/User_PAI_Message";
 import { ChatStore } from "../Stores/ChatStore";
 import Sidebar from "../components/Sidebar";
 import LoadingSpinner from "../components/LoadingSpinner";
-import { serverConnectedMessages } from "../utils/DataLists";
+import { serverConnectedMessages , createNewChatMessages , startConversationMessages } from "../utils/DataLists";
 import toast from "react-hot-toast";
 
 const Home = () => {
@@ -282,9 +282,9 @@ const Home = () => {
               ) : (
                 <div className="w-full text-center">
                   {recentChats?.length <= 0 ? (
-                    <h1>Create new Chat to start.</h1>
+                    <h1>{ createNewChatMessages[Math.floor(Math.random() * createNewChatMessages.length)] }</h1>
                   ) : (
-                    <h1>There is no conversation to show</h1>
+                    <h1>{ startConversationMessages[Math.floor(Math.random() * startConversationMessages.length )] }</h1>
                   )}
                 </div>
               )}
