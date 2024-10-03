@@ -15,7 +15,7 @@ const Dropdown = ({handleProfileData : handleProfileData , setShowDropdown , dro
                 handleProfileData(e) ;
                 setShowDropdown(null);
             }}/> 
-            <label htmlFor={item} className='pb-1'>{item}</label>
+            <label htmlFor={item} className='pb-1 w-full'>{item}</label>
         </div>
       ))}
       </div>
