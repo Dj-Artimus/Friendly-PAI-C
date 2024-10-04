@@ -31,9 +31,6 @@ const App = () => {
   useEffect(() => {
      // Handle connection success
      socket.on("connect", () => {
-      getLatestChat(); // Refresh chat when connected
-      getRecentChats();
-
       if (toastId) {
         toast.dismiss(toastId);
         setToastId(null);
