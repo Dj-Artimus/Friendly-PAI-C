@@ -1,9 +1,6 @@
 import axios from 'axios'
 import toast from 'react-hot-toast'
 import { create } from 'zustand'
-import Cookies from 'js-cookie'
-
-
 
 const SERVER = import.meta.env.VITE_SERVER;
 
@@ -22,10 +19,7 @@ export const AuthStore = create((set) => ({
             set({ isLoading: true })
             const response = await api.post(`${SERVER}/api/auth/signup`, { name, email, password })
             toast.success(response.data.message)
-            Cookies.set("safeToken", response.data.token , {
-                secure: true,
-                sameSite: "strict",
-            } )
+            localStorage.setItem("safeToken", response.data.token)
             set({ isLoading: false})
             return response.data.success;
         } catch (error) {
@@ -76,11 +70,7 @@ export const AuthStore = create((set) => ({
             set({ isLoading: true })
             const response = await api.post(`${SERVER}/api/auth/login`, { email, password })
             set({ isLoading: false })
-            // localStorage.setItem("token", response.data.token )
-            Cookies.set("safeToken", response.data.token , {
-                secure: true,
-                sameSite: "strict",
-            } )
+            localStorage.setItem("safeToken", response.data.token )
             toast.success(response.data.message)
             return response.data.success;
         } catch (error) {
@@ -94,7 +84,7 @@ export const AuthStore = create((set) => ({
             set({ isLoading: true })
             const response = await api.post(`${SERVER}/api/auth/logout`);
             set({ isLoading: false , isAuthorized: false, isVerified: false})
-            Cookies.remove("safeToken");
+            localStorage.removeItem("safeToken");
             toast.success(response.data.message);
             return response.data.success;
         } catch (error) {
@@ -132,7 +122,7 @@ export const AuthStore = create((set) => ({
     AuthorizationCheck: async () => {
         try {
             const response = await api.post(`${SERVER}/api/auth/authorization-check` , {} , { headers : {
-                Authorization : `Bearer ${Cookies.get("safeToken")}`,
+                Authorization : `Bearer ${localStorage.getItem("safeToken")}`,
                 'Content-Type' : 'application/json'
             } } );
             set({ isCheckingAuth: false,  isVerified: response.data.isVerified , isAuthorized : response.data.isAuthorized });
