@@ -1,9 +1,10 @@
 import React, { useEffect } from "react";
+import { io } from "socket.io-client";
 import { Routes, Route, Navigate, Outlet } from "react-router-dom";
 import Home from "./Pages/Home";
 import LoginPage from "./Pages/LoginPage";
 import SignUpPage from "./Pages/SignUpPage";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import VerifyPage from "./Pages/VerifyPage";
 import ProfilePage from "./Pages/ProfilePage";
 // import NotFoundPage from "./Pages/NotFoundPage";
@@ -14,9 +15,54 @@ import AddInterests from "./Pages/AddInterests";
 import LandingPage from "./Pages/LandingPage";
 import VerifyUserViaLink from "./Pages/VerifyUserViaLink";
 import ProtectedRoute from "./utils/ProtectedRoute";
-import RedirectRoute from "./utils/RedirectRoute"
+import RedirectRoute from "./utils/RedirectRoute";
+import { serverConnectedMessages } from "./utils/DataLists";
 
 const App = () => {
+  const [toastId, setToastId] = useState(null);
+
+  const socket = io(import.meta.env.VITE_SERVER, {
+    withCredentials: true,
+    reconnection: true,
+    reconnectionAttempts: Infinity,
+    reconnectionDelay: 2000,
+  });
+
+  useEffect(() => {
+     // Handle connection success
+     socket.on("connect", () => {
+      getLatestChat(); // Refresh chat when connected
+      getRecentChats();
+
+      if (toastId) {
+        toast.dismiss(toastId);
+        setToastId(null);
+      }
+    });
+
+    socket.on("disconnect", () => {
+      if (!toastId) {
+        const id = toast.loading("Connecting to the server...");
+        setToastId(id);
+      }
+    });
+
+    // Handle reconnection attempts and success
+    socket.io.on("reconnect", () => {
+      if (toastId) {
+        toast.dismiss(); // Dismiss loading toast
+        setToastId(null);
+      }
+
+      toast.success(serverConnectedMessages[Math.floor(Math.random()*serverConnectedMessages.length)]);
+    });
+
+    // Cleanup: disconnect the socket on component unmount
+    return () => {
+      socket.disconnect();
+    };
+  }, [toastId])
+  
   return (
     <>
       <Routes>

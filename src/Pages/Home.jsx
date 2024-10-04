@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { io } from "socket.io-client";
 import { motion } from "framer-motion";
 import {
   AlignStartVertical,
@@ -14,7 +13,7 @@ import User_PAI_Message from "../components/User_PAI_Message";
 import { ChatStore } from "../Stores/ChatStore";
 import Sidebar from "../components/Sidebar";
 import LoadingSpinner from "../components/LoadingSpinner";
-import { serverConnectedMessages , createNewChatMessages , startConversationMessages } from "../utils/DataLists";
+import { createNewChatMessages , startConversationMessages } from "../utils/DataLists";
 import toast from "react-hot-toast";
 import { AuthStore } from "../Stores/AuthStore";
 
@@ -41,14 +40,6 @@ const Home = () => {
   const [recentChats, setRecentChats] = useState([]);
   const ConversationRef = useRef();
   const [isListening, setIsListening] = useState(false);
-  const [toastId, setToastId] = useState(null);
-
-  const socket = io(import.meta.env.VITE_SERVER, {
-    withCredentials: true,
-    reconnection: true,
-    reconnectionAttempts: Infinity,
-    reconnectionDelay: 2000,
-  });
 
 
   useEffect(() => {
@@ -93,39 +84,7 @@ const Home = () => {
     getLatestChat();
     getRecentChats();
 
-    // Handle connection success
-    socket.on("connect", () => {
-      getLatestChat(); // Refresh chat when connected
-      getRecentChats();
-
-      if (toastId) {
-        toast.dismiss(toastId);
-        setToastId(null);
-      }
-    });
-
-    socket.on("disconnect", () => {
-      if (!toastId) {
-        const id = toast.loading("Connecting to the server...");
-        setToastId(id);
-      }
-    });
-
-    // Handle reconnection attempts and success
-    socket.io.on("reconnect", () => {
-      if (toastId) {
-        toast.dismiss(); // Dismiss loading toast
-        setToastId(null);
-      }
-
-      toast.success(serverConnectedMessages[Math.floor(Math.random()*serverConnectedMessages.length)]);
-    });
-
-    // Cleanup: disconnect the socket on component unmount
-    return () => {
-      socket.disconnect();
-    };
-  }, [toastId]);
+  }, []);
 
   useEffect(() => {
     ConversationRef.current.scrollTo({
