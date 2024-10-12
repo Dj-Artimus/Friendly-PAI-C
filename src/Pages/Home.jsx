@@ -14,7 +14,6 @@ import { ChatStore } from "../Stores/ChatStore";
 import Sidebar from "../components/Sidebar";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { createNewChatMessages , startConversationMessages } from "../utils/DataLists";
-import toast from "react-hot-toast";
 import { AuthStore } from "../Stores/AuthStore";
 
 const Home = () => {
@@ -167,16 +166,10 @@ const Home = () => {
   const handleAskQuery = async (e) => {
     e.preventDefault();
     if (question) return handleAskFriendlyPAI(question, chatId);
-    // toast.error("Prompt cant be empty")
   };
 
   const handleLogout = async () => { 
     await Logout();
-    if(socket) socket.disconnect();
-    if(toastId) {
-      toast.dismiss(toastId);
-      setToastId(null);
-    }
     navigate('/Friendly-PAI')
    }
 
@@ -297,7 +290,7 @@ const Home = () => {
                   isLoading && "animate-pulse"
                 } ${question.length < 1 && "text-slate-500"} `}
                 disabled={
-                  !recentChats?.length || isChatLoading || isLoading || showPrev
+                  !recentChats?.length || isChatLoading || isLoading
                 }
               >
                 <motion.div
