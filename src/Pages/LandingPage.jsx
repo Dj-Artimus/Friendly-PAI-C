@@ -143,7 +143,7 @@ const LandingPage = () => {
           <p className="text-sm text-center">
             &copy; 2024 Friendly PAI. All rights reserved.
           </p>
-          <h1 className="font-bold">Developed by DjArtimus (Rushali) </h1>
+          <h1 className="font-bold">Developed by DjArtimus</h1>
           <h1 className="font-bold">Thank You for Visiting Me.</h1>
           <h1 className="font-semibold">Yours Friendly PAI</h1>
         </motion.div>
